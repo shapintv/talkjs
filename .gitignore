@@ -1,0 +1,8 @@
+/build/
+/composer.lock
+/phpspec.yml
+/phpunit.xml
+/vendor/
+/var/
+!/var/.gitkeep
+/.phpunit.result.cache
