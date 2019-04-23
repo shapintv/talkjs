@@ -68,4 +68,9 @@ final class TalkJSClient
     {
         return new Api\User($this->httpClient, $this->hydrator, $this->requestBuilder);
     }
+
+    public function conversations(): Api\Conversation
+    {
+        return new Api\Conversation($this->httpClient, $this->hydrator, $this->requestBuilder);
+    }
 }

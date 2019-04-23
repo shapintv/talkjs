@@ -23,14 +23,14 @@ final class UserTest extends TestCase
 
     public function testCreateOrUpdate()
     {
-        $response = $this->api->createOrUpdate('a_dump_id', [
+        $response = $this->api->createOrUpdate('my_user', [
             'name' => 'Georges Abitbol',
             'email' => ['georges@abitbol.fr'],
         ]);
 
         $this->assertInstanceOf(UserCreatedOrUpdated::class, $response);
 
-        $response = $this->api->createOrUpdate('a_dump_id', [
+        $response = $this->api->createOrUpdate('my_user', [
             'name' => 'Georges Abitbol',
             'custom' => [
                 'test' => 'coucou',
