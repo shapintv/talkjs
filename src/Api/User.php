@@ -29,4 +29,18 @@ final class User extends HttpApi
 
         return $this->hydrator->hydrate($response, Model\User\UserCreatedOrUpdated::class);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function get(string $id)
+    {
+        $response = $this->httpGet("/users/$id");
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\User\User::class);
+    }
 }
