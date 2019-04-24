@@ -21,8 +21,16 @@ class BadRequestException extends \Exception implements DomainException
         $this->response = $response;
         $content = json_decode($response->getBody()->__toString(), true);
 
-        dump($content);die;
-        parent::__construct('Bad Request');
+        if (!isset($content['reasons'])) {
+            parent::__construct('Bad Request: No reason.');
+
+            return;
+        }
+
+        $field = array_key_first($content['reasons']);
+        $reason = reset($content['reasons'])[0];
+
+        parent::__construct("Bad request: Field $field: $reason.");
     }
 
     public function getResponse(): ResponseInterface
