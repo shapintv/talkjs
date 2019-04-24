@@ -11,6 +11,7 @@ namespace Shapin\TalkJS\Tests\FunctionalTests;
 
 use Shapin\TalkJS\Exception\Domain\NotFoundException;
 use Shapin\TalkJS\Model\Conversation\Conversation;
+use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
 
 final class ConversationTest extends TestCase
@@ -64,5 +65,9 @@ final class ConversationTest extends TestCase
         $this->assertSame('my_conversation', $conversation->getId());
         $custom = $conversation->getCustom();
         $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
+
+        $collection = $this->api->find(['limit' => 50]);
+        $this->assertInstanceOf(ConversationCollection::class, $collection);
+        $this->assertTrue($collection->contains('my_conversation'));
     }
 }
