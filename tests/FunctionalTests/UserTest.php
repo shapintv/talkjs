@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
-use Shapin\TalkJS\Exception\Domain\NotFoundException;
 use Shapin\TalkJS\Model\User\User;
 use Shapin\TalkJS\Model\User\UserCreatedOrUpdated;
 

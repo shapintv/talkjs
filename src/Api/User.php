@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Api;
 
-use Shapin\TalkJS\Configuration;
 use Shapin\TalkJS\Exception;
 use Shapin\TalkJS\Model;
-use Symfony\Component\Config\Definition\Processor;
 
 final class User extends HttpApi
 {

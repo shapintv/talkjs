@@ -29,7 +29,7 @@ class BadRequestException extends \Exception implements DomainException
 
         $field = array_key_first($content['reasons']);
         $reasons = reset($content['reasons']);
-        $reason = is_array($reasons) ? $reasons[0] : $reasons;
+        $reason = \is_array($reasons) ? $reasons[0] : $reasons;
 
         parent::__construct("Bad request: Field $field: $reason.");
     }

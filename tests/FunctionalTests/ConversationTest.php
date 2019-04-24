@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
-use Shapin\TalkJS\Exception\Domain\NotFoundException;
 use Shapin\TalkJS\Model\Conversation\Conversation;
 use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;

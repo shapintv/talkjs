@@ -106,7 +106,7 @@ abstract class HttpApi
 
         $body = json_encode($params);
 
-        if (!is_string($body)) {
+        if (!\is_string($body)) {
             throw new LogicException('An error occured when encoding body: '.json_last_error_msg());
         }
 

@@ -9,42 +9,42 @@ use Shapin\TalkJS\Model\CreatableFromArray;
 class Conversation implements CreatableFromArray
 {
     /**
-     * @type string
+     * @var string
      */
     private $id;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $subject;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $topicId;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $photoUrl;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $welcomeMessages;
 
     /**
-     * @type array
+     * @var array
      */
     private $custom;
 
     /**
-     * @type array
+     * @var array
      */
     private $participants;
 
     /**
-     * @type \DateTimeImmutable
+     * @var \DateTimeImmutable
      */
     private $createdAt;
 

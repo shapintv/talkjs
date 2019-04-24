@@ -9,57 +9,57 @@ use Shapin\TalkJS\Model\CreatableFromArray;
 class User implements CreatableFromArray
 {
     /**
-     * @type string
+     * @var string
      */
     private $id;
 
     /**
-     * @type string
+     * @var string
      */
     private $name;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $welcomeMessage;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $photoUrl;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $role;
 
     /**
-     * @type array
+     * @var array
      */
     private $email;
 
     /**
-     * @type array
+     * @var array
      */
     private $phone;
 
     /**
-     * @type array
+     * @var array
      */
     private $custom;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $availabilityText;
 
     /**
-     * @type ?string
+     * @var ?string
      */
     private $locale;
 
     /**
-     * @type \DateTimeImmutable
+     * @var \DateTimeImmutable
      */
     private $createdAt;
 

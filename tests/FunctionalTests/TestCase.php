@@ -11,8 +11,6 @@ namespace Shapin\TalkJS\Tests\FunctionalTests;
 
 use Shapin\TalkJS\HttpClientConfigurator;
 use Shapin\TalkJS\TalkJSClient;
-use GuzzleHttp\Psr7\Request;
-use Http\Client\Exception\NetworkException;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
