@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
 use Shapin\TalkJS\Exception\Domain\NotFoundException;
+use Shapin\TalkJS\Model\Conversation\Conversation;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
 
 final class ConversationTest extends TestCase
@@ -23,21 +24,45 @@ final class ConversationTest extends TestCase
 
     public function testCreateOrUpdate()
     {
+        $randomTestString = bin2hex(random_bytes(10));
+
         $response = $this->api->createOrUpdate('my_conversation', [
             'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
+            'welcomeMessages' => ['Hello', 'World'],
+            'photoUrl' => 'photo_url',
         ]);
 
         $this->assertInstanceOf(ConversationCreatedOrUpdated::class, $response);
+
+        $conversation = $this->api->get('my_conversation');
+        $this->assertInstanceOf(Conversation::class, $conversation);
+
+        $this->assertSame('my_conversation', $conversation->getId());
+        $this->assertSame('An amazing conversation', $conversation->getSubject());
+        $this->assertNull($conversation->getTopicId());
+        $this->assertSame('photo_url', $conversation->getPhotoUrl());
+        $this->assertSame(['Hello', 'World'], $conversation->getWelcomeMessages());
+        $custom = $conversation->getCustom();
+        $this->assertFalse(isset($custom['test']) && $randomTestString === $custom['test']);
+        $this->assertSame(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
         $response = $this->api->createOrUpdate('my_conversation', [
             'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
             'custom' => [
-                'test' => 'coucou',
+                'test' => $randomTestString,
             ],
         ]);
 
         $this->assertInstanceOf(ConversationCreatedOrUpdated::class, $response);
+
+        $conversation = $this->api->get('my_conversation');
+        $this->assertInstanceOf(Conversation::class, $conversation);
+
+        $this->assertSame('my_conversation', $conversation->getId());
+        $custom = $conversation->getCustom();
+        $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
     }
 }

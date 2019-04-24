@@ -33,4 +33,18 @@ final class Conversation extends HttpApi
 
         return $this->hydrator->hydrate($response, Model\Conversation\ConversationCreatedOrUpdated::class);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function get(string $id)
+    {
+        $response = $this->httpGet("/conversations/$id");
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\Conversation::class);
+    }
 }
