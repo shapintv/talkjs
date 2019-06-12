@@ -17,12 +17,54 @@ $ composer require shapintv/talkjs
 
 ## Usage
 
+### Create a `TalkJSClient`
+
+Using the static `create` method:
+
 ``` php
 $client = TalkJSClient::create($secretKey, $appId);
-// Create a customer
+```
+
+Using your own `HttpClient`:
+
+```php
+$client = new TalkJSClient($myHttpClient);
+```
+
+Learn how to create your own client on [PHP-HTTP documentation](http://docs.php-http.org/en/latest/).
+If you use your own client, be sure to configure it properly. See [HttpClientConfigurator](src/HttpClientConfigurator.php) to see what's needed.
+
+### Deal with users
+
+```php
+// Create or update a user
 $client->users()->createOrUpdate('my_custom_id', [
     'email' => 'georges@abitbol.com',
 ]);
+
+// Retrieve a user
+$user = $client->users()->get('my_custom_id');
+```
+
+### Deal with conversations
+
+```php
+// Create or update a user
+$client->conversations()->createOrUpdate('my_custom_id', [
+    'subject' => 'My new conversation',
+]);
+
+// Retrive a conversation
+$conversation = $client->conversations()->get('my_custom_id');
+
+// Find conversations
+$conversations = $client->conversations()->find();
+
+// Join a conversation
+$client->conversation()->join('my_conversation_id', 'my_user_id');
+
+// Leave a conversation
+$client->conversation()->leave('my_conversation_id', 'my_user_id');
 ```
 
 ## License
