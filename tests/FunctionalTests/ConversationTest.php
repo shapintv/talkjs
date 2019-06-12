@@ -10,8 +10,11 @@ declare(strict_types=1);
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
 use Shapin\TalkJS\Model\Conversation\Conversation;
+use Shapin\TalkJS\Model\Conversation\ConversationJoined;
+use Shapin\TalkJS\Model\Conversation\ConversationLeft;
 use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
+use Shapin\TalkJS\Model\Conversation\ParticipationUpdated;
 
 final class ConversationTest extends TestCase
 {
@@ -68,5 +71,32 @@ final class ConversationTest extends TestCase
         $collection = $this->api->find(['limit' => 50]);
         $this->assertInstanceOf(ConversationCollection::class, $collection);
         $this->assertTrue($collection->contains('my_conversation'));
+
+        // Delete my_user from participants
+        $conversationLeft = $this->api->leave('my_conversation', 'my_user');
+        $this->assertInstanceOf(ConversationLeft::class, $conversationLeft);
+
+        $conversation = $this->api->get('my_conversation');
+        $this->assertInstanceOf(Conversation::class, $conversation);
+        $this->assertSame([], $conversation->getParticipants());
+
+        // Add user back in participants
+        $conversationJoined = $this->api->join('my_conversation', 'my_user');
+        $this->assertInstanceOf(ConversationJoined::class, $conversationJoined);
+
+        $conversation = $this->api->get('my_conversation');
+        $this->assertInstanceOf(Conversation::class, $conversation);
+        $this->assertSame(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
+
+        // Modify participation
+        $participationUpdated = $this->api->updateParticipation('my_conversation', 'my_user', ['notify' => false, 'access' => 'Read']);
+        $this->assertInstanceOf(ParticipationUpdated::class, $participationUpdated);
+
+        $conversation = $this->api->get('my_conversation');
+        $this->assertInstanceOf(Conversation::class, $conversation);
+        $this->assertSame(['my_user' => ['notify' => false, 'access' => 'Read']], $conversation->getParticipants());
+
+        // UGLY HACK: Put preferences back (otherwise tests won't work next time).
+        $this->api->updateParticipation('my_conversation', 'my_user', ['notify' => true, 'access' => 'ReadWrite']);
     }
 }

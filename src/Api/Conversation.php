@@ -59,4 +59,46 @@ final class Conversation extends HttpApi
 
         return $this->hydrator->hydrate($response, Model\Conversation\ConversationCollection::class);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function join(string $conversationId, string $userId, array $params = [])
+    {
+        $response = $this->httpPut("/conversations/$conversationId/participants/$userId", $params);
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\ConversationJoined::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function updateParticipation(string $conversationId, string $userId, array $params = [])
+    {
+        $response = $this->httpPatch("/conversations/$conversationId/participants/$userId", $params);
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\ParticipationUpdated::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function leave(string $conversationId, string $userId)
+    {
+        $response = $this->httpDelete("/conversations/$conversationId/participants/$userId");
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\ConversationLeft::class);
+    }
 }
