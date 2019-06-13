@@ -67,6 +67,43 @@ $client->conversation()->join('my_conversation_id', 'my_user_id');
 $client->conversation()->leave('my_conversation_id', 'my_user_id');
 ```
 
+### Integration with symfony
+
+Create a new HttpClient:
+
+```yml
+httplug:
+    clients:
+        talkjs:
+            plugins:
+                - 'httplug.plugin.content_length'
+                - 'httplug.plugin.redirect'
+                - add_host:
+                    host: 'https://api.talkjs.com/'
+                - add_path:
+                    path: '/v1/%env(TALKJS_APP_ID)%'
+                - header_append:
+                    headers:
+                        'User-Agent': 'Shapin/TalkJS (https://github.com/shapintv/talkjs)'
+                        'Content-Type': 'application/json'
+                - authentication:
+                    bearer:
+                        type: 'bearer'
+                        token: '%env(TALKJS_SECRET_KEY)%'
+```
+
+Then create your service:
+
+```yml
+services:
+    Shapin\TalkJS\TalkJSClient:
+        arguments: ['@httplug.client.talkjs']
+```
+
+You're done!
+
+One day, I may consider creating a bundle in order to bootstrap this SDK...
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
