@@ -28,8 +28,9 @@ final class ConversationTest extends TestCase
     public function testCreateOrUpdate()
     {
         $randomTestString = bin2hex(random_bytes(10));
+        $conversationId = "conversation_$randomTestString";
 
-        $response = $this->api->createOrUpdate('my_conversation', [
+        $response = $this->api->createOrUpdate($conversationId, [
             'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
             'welcomeMessages' => ['Hello', 'World'],
@@ -38,10 +39,10 @@ final class ConversationTest extends TestCase
 
         $this->assertInstanceOf(ConversationCreatedOrUpdated::class, $response);
 
-        $conversation = $this->api->get('my_conversation');
+        $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
 
-        $this->assertSame('my_conversation', $conversation->getId());
+        $this->assertSame($conversationId, $conversation->getId());
         $this->assertSame('An amazing conversation', $conversation->getSubject());
         $this->assertNull($conversation->getTopicId());
         $this->assertSame('photo_url', $conversation->getPhotoUrl());
@@ -51,7 +52,7 @@ final class ConversationTest extends TestCase
         $this->assertSame(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
         $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
-        $response = $this->api->createOrUpdate('my_conversation', [
+        $response = $this->api->createOrUpdate($conversationId, [
             'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
             'custom' => [
@@ -61,42 +62,39 @@ final class ConversationTest extends TestCase
 
         $this->assertInstanceOf(ConversationCreatedOrUpdated::class, $response);
 
-        $conversation = $this->api->get('my_conversation');
+        $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
 
-        $this->assertSame('my_conversation', $conversation->getId());
+        $this->assertSame($conversationId, $conversation->getId());
         $custom = $conversation->getCustom();
         $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
 
         $collection = $this->api->find(['limit' => 50]);
         $this->assertInstanceOf(ConversationCollection::class, $collection);
-        $this->assertTrue($collection->contains('my_conversation'));
+        $this->assertTrue($collection->contains($conversationId));
 
         // Delete my_user from participants
-        $conversationLeft = $this->api->leave('my_conversation', 'my_user');
+        $conversationLeft = $this->api->leave($conversationId, 'my_user');
         $this->assertInstanceOf(ConversationLeft::class, $conversationLeft);
 
-        $conversation = $this->api->get('my_conversation');
+        $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
         $this->assertSame([], $conversation->getParticipants());
 
         // Add user back in participants
-        $conversationJoined = $this->api->join('my_conversation', 'my_user');
+        $conversationJoined = $this->api->join($conversationId, 'my_user');
         $this->assertInstanceOf(ConversationJoined::class, $conversationJoined);
 
-        $conversation = $this->api->get('my_conversation');
+        $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
         $this->assertSame(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
 
         // Modify participation
-        $participationUpdated = $this->api->updateParticipation('my_conversation', 'my_user', ['notify' => false, 'access' => 'Read']);
+        $participationUpdated = $this->api->updateParticipation($conversationId, 'my_user', ['notify' => false, 'access' => 'Read']);
         $this->assertInstanceOf(ParticipationUpdated::class, $participationUpdated);
 
-        $conversation = $this->api->get('my_conversation');
+        $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
         $this->assertSame(['my_user' => ['notify' => false, 'access' => 'Read']], $conversation->getParticipants());
-
-        // UGLY HACK: Put preferences back (otherwise tests won't work next time).
-        $this->api->updateParticipation('my_conversation', 'my_user', ['notify' => true, 'access' => 'ReadWrite']);
     }
 }
