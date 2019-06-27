@@ -23,7 +23,7 @@ final class Conversation extends HttpApi
             throw new Exception\InvalidArgumentException('You need to specify at least 1 user when creating or updateing a conversation.');
         }
 
-        $response = $this->httpPut("/conversations/$id", $params);
+        $response = $this->httpPut("conversations/$id", $params);
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
@@ -37,7 +37,7 @@ final class Conversation extends HttpApi
      */
     public function get(string $id)
     {
-        $response = $this->httpGet("/conversations/$id");
+        $response = $this->httpGet("conversations/$id");
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
@@ -51,7 +51,7 @@ final class Conversation extends HttpApi
      */
     public function find(array $filters = []): Model\Conversation\ConversationCollection
     {
-        $response = $this->httpGet('/conversations', $filters);
+        $response = $this->httpGet('conversations', $filters);
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
@@ -65,7 +65,7 @@ final class Conversation extends HttpApi
      */
     public function join(string $conversationId, string $userId, array $params = [])
     {
-        $response = $this->httpPut("/conversations/$conversationId/participants/$userId", $params);
+        $response = $this->httpPut("conversations/$conversationId/participants/$userId", $params);
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
@@ -79,7 +79,7 @@ final class Conversation extends HttpApi
      */
     public function updateParticipation(string $conversationId, string $userId, array $params = [])
     {
-        $response = $this->httpPatch("/conversations/$conversationId/participants/$userId", $params);
+        $response = $this->httpPatch("conversations/$conversationId/participants/$userId", $params);
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
@@ -93,7 +93,7 @@ final class Conversation extends HttpApi
      */
     public function leave(string $conversationId, string $userId)
     {
-        $response = $this->httpDelete("/conversations/$conversationId/participants/$userId");
+        $response = $this->httpDelete("conversations/$conversationId/participants/$userId");
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);

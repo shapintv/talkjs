@@ -19,7 +19,7 @@ final class User extends HttpApi
      */
     public function createOrUpdate(string $id, array $params)
     {
-        $response = $this->httpPut("/users/$id", $params);
+        $response = $this->httpPut("users/$id", $params);
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);
@@ -33,7 +33,7 @@ final class User extends HttpApi
      */
     public function get(string $id)
     {
-        $response = $this->httpGet("/users/$id");
+        $response = $this->httpGet("users/$id");
 
         if (200 !== $response->getStatusCode()) {
             $this->handleErrors($response);

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Hydrator;
 
-use Psr\Http\Message\ResponseInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Hydrate a PSR-7 response to something else.

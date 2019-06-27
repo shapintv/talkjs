@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Exception\Domain;
 
-use Psr\Http\Message\ResponseInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Shapin\TalkJS\Exception\DomainException;
 
 class BadRequestException extends \Exception implements DomainException
@@ -19,7 +19,9 @@ class BadRequestException extends \Exception implements DomainException
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
-        $content = json_decode($response->getBody()->__toString(), true);
+        $content = json_decode($response->getContent(false), true);
+
+        var_dump($response->getContent(false));
 
         if (!isset($content['reasons'])) {
             parent::__construct('Bad Request: No reason.');

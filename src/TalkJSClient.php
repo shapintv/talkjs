@@ -11,7 +11,7 @@ namespace Shapin\TalkJS;
 
 use Shapin\TalkJS\Hydrator\ModelHydrator;
 use Shapin\TalkJS\Hydrator\Hydrator;
-use Http\Client\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class TalkJSClient
 {
@@ -25,52 +25,19 @@ final class TalkJSClient
      */
     private $hydrator;
 
-    /**
-     * @var RequestBuilder
-     */
-    private $requestBuilder;
-
-    /**
-     * The constructor accepts already configured HTTP clients.
-     * Use the configure method to pass a configuration to the Client and create an HTTP Client.
-     */
-    public function __construct(
-        HttpClient $httpClient,
-        Hydrator $hydrator = null,
-        RequestBuilder $requestBuilder = null
-    ) {
-        $this->httpClient = $httpClient;
-        $this->hydrator = $hydrator ?: new ModelHydrator();
-        $this->requestBuilder = $requestBuilder ?: new RequestBuilder();
-    }
-
-    public static function configure(
-        HttpClientConfigurator $httpClientConfigurator,
-        Hydrator $hydrator = null,
-        RequestBuilder $requestBuilder = null
-    ): self {
-        $httpClient = $httpClientConfigurator->createConfiguredClient();
-
-        return new self($httpClient, $hydrator, $requestBuilder);
-    }
-
-    public static function create(string $secretKey, string $appId): self
+    public function __construct(HttpClientInterface $talkjsClient, Hydrator $hydrator = null)
     {
-        $httpClientConfigurator = (new HttpClientConfigurator())
-            ->setApiKey($secretKey)
-            ->setAppId($appId)
-        ;
-
-        return self::configure($httpClientConfigurator);
+        $this->httpClient = $talkjsClient;
+        $this->hydrator = $hydrator ?: new ModelHydrator();
     }
 
     public function users(): Api\User
     {
-        return new Api\User($this->httpClient, $this->hydrator, $this->requestBuilder);
+        return new Api\User($this->httpClient, $this->hydrator);
     }
 
     public function conversations(): Api\Conversation
     {
-        return new Api\Conversation($this->httpClient, $this->hydrator, $this->requestBuilder);
+        return new Api\Conversation($this->httpClient, $this->hydrator);
     }
 }

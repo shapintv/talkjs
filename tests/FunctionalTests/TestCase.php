@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
-use Shapin\TalkJS\HttpClientConfigurator;
-use Shapin\TalkJS\TalkJSClient;
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Shapin\TalkJS\TalkJSClient;
+use Symfony\Component\HttpClient\HttpClient;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -20,12 +20,13 @@ abstract class TestCase extends BaseTestCase
 
     public function getTalkJSClient()
     {
-        $httpClientConfigurator = (new HttpClientConfigurator())
-            ->setSecretKey(self::SECRET_KEY)
-            ->setAppId(self::APP_ID)
-        ;
-
-        $httpClient = $httpClientConfigurator->createConfiguredClient();
+        $httpClient = HttpClient::create([
+            'base_uri' => 'https://api.talkjs.com/v1/'.self::APP_ID.'/',
+            'auth_bearer' => self::SECRET_KEY,
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+        ]);
 
         return new TalkJSClient($httpClient);
     }

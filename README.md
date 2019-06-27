@@ -19,20 +19,20 @@ $ composer require shapintv/talkjs
 
 ### Create a `TalkJSClient`
 
-Using the static `create` method:
-
-``` php
-$client = TalkJSClient::create($secretKey, $appId);
-```
-
-Using your own `HttpClient`:
-
 ```php
-$client = new TalkJSClient($myHttpClient);
-```
+use Shapin\TalkJS\TalkJSClient;
+use Symfony\Component\HttpClient\HttpClient;
 
-Learn how to create your own client on [PHP-HTTP documentation](http://docs.php-http.org/en/latest/).
-If you use your own client, be sure to configure it properly. See [HttpClientConfigurator](src/HttpClientConfigurator.php) to see what's needed.
+$httpClient = HttpClient::create([
+    'base_uri' => 'https://api.talkjs.com/v1/'.self::APP_ID.'/',
+    'auth_bearer' => self::SECRET_KEY,
+    'headers' => [
+        'Content-Type' => 'application/json',
+    ],
+]);
+
+$talkJSClient = new TalkJSClient($httpClient);
+```
 
 ### Deal with users
 
@@ -72,32 +72,21 @@ $client->conversation()->leave('my_conversation_id', 'my_user_id');
 Create a new HttpClient:
 
 ```yml
-httplug:
-    clients:
-        talkjs:
-            plugins:
-                - 'httplug.plugin.content_length'
-                - 'httplug.plugin.redirect'
-                - add_host:
-                    host: 'https://api.talkjs.com/'
-                - add_path:
-                    path: '/v1/%env(TALKJS_APP_ID)%'
-                - header_append:
-                    headers:
-                        'User-Agent': 'Shapin/TalkJS (https://github.com/shapintv/talkjs)'
-                        'Content-Type': 'application/json'
-                - authentication:
-                    bearer:
-                        type: 'bearer'
-                        token: '%env(TALKJS_SECRET_KEY)%'
+framework:
+    http_client:
+        scoped_clients:
+            talkjs.client:
+                auth_bearer: '%env(TALKJS_SECRET_KEY)%'
+                base_uri: 'https://api.talkjs.com/v1/%env(TALKJS_APP_ID)%/'
+                headers:
+                    'Content-Type': 'application/json'
 ```
 
 Then create your service:
 
 ```yml
 services:
-    Shapin\TalkJS\TalkJSClient:
-        arguments: ['@httplug.client.talkjs']
+    Shapin\TalkJS\TalkJSClient: ~
 ```
 
 You're done!
