@@ -9,8 +9,33 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Exception\Domain;
 
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Shapin\TalkJS\Exception\DomainException;
 
 final class UnknownErrorException extends \Exception implements DomainException
 {
+    protected $response;
+
+    public function __construct(ResponseInterface $response)
+    {
+        $this->response = $response;
+        $content = json_decode($response->getContent(false), true);
+
+        if (!isset($content['reasons'])) {
+            parent::__construct('Unknown error: No reason.');
+
+            return;
+        }
+
+        $field = array_key_first($content['reasons']);
+        $reasons = reset($content['reasons']);
+        $reason = \is_array($reasons) ? $reasons[0] : $reasons;
+
+        parent::__construct("Unknown error: Field $field: $reason.");
+    }
+
+    public function getResponse(): ResponseInterface
+    {
+        return $this->response;
+    }
 }

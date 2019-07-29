@@ -136,7 +136,7 @@ abstract class HttpApi
             case 429:
                 throw new DomainExceptions\TooManyRequestsException();
             default:
-                throw new DomainExceptions\UnknownErrorException();
+                throw new DomainExceptions\UnknownErrorException($response);
         }
     }
 }
