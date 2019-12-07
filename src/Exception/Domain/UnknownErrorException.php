@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Exception\Domain;
 
-use Symfony\Contracts\HttpClient\ResponseInterface;
 use Shapin\TalkJS\Exception\DomainException;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class UnknownErrorException extends \Exception implements DomainException
 {

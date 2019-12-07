@@ -19,15 +19,12 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 final class ModelHydrator implements Hydrator
 {
     /**
-     * @param ResponseInterface $response
-     * @param string            $class
-     *
      * @return mixed
      */
     public function hydrate(ResponseInterface $response, string $class)
     {
         if (!isset($response->getHeaders()['content-type'])) {
-            throw new HydrationException("The ModelHydrator cannot hydrate response with Content-Type: $contentType");
+            throw new HydrationException('The ModelHydrator cannot hydrate response without Content-Type header.');
         }
 
         $contentType = reset($response->getHeaders()['content-type']);

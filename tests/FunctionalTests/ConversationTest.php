@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
 use Shapin\TalkJS\Model\Conversation\Conversation;
-use Shapin\TalkJS\Model\Conversation\ConversationJoined;
-use Shapin\TalkJS\Model\Conversation\ConversationLeft;
 use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
+use Shapin\TalkJS\Model\Conversation\ConversationJoined;
+use Shapin\TalkJS\Model\Conversation\ConversationLeft;
 use Shapin\TalkJS\Model\Conversation\ParticipationUpdated;
 
 final class ConversationTest extends TestCase

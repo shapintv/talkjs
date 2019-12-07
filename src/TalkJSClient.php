@@ -9,20 +9,13 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS;
 
-use Shapin\TalkJS\Hydrator\ModelHydrator;
 use Shapin\TalkJS\Hydrator\Hydrator;
+use Shapin\TalkJS\Hydrator\ModelHydrator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class TalkJSClient
 {
-    /**
-     * @var HttpClient
-     */
     private $httpClient;
-
-    /**
-     * @var Hydrator
-     */
     private $hydrator;
 
     public function __construct(HttpClientInterface $talkjsClient, Hydrator $hydrator = null)
