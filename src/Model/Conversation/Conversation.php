@@ -29,7 +29,7 @@ class Conversation implements CreatableFromArray
     private $photoUrl;
 
     /**
-     * @var ?string
+     * @var array
      */
     private $welcomeMessages;
 
