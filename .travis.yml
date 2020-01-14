@@ -1,13 +1,8 @@
 language: php
 
-sudo: false
-
 cache:
     directories:
-        - $HOME/.composer/cache/files
-
-php:
-    - 7.3
+        - $HOME/.composer/cache
 
 env:
     global:
@@ -16,19 +11,29 @@ env:
 matrix:
     fast_finish: true
     include:
+        # Test with lowest dependencies
         - php: 7.3
+          env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
+
+        # Test the latest stable release
         - php: 7.3
-          env: COVERAGE=true TEST_COMMAND="composer test-ci"
+        - php: 7.4
+
+        # Dev dependencies
+        - php: 7.4
+          env: STABILITY="dev"
+
+    allow_failures:
+          # Dev-master is allowed to fail.
+        - env: STABILITY="dev"
 
 before_install:
-    - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
+    - phpenv config-rm xdebug.ini || true
+    - if ! [ -z "$STABILITY" ]; then composer config minimum-stability ${STABILITY}; fi;
 
 install:
-    - travis_retry composer install --prefer-dist --no-interaction
+    - composer update ${COMPOSER_FLAGS} --prefer-dist --prefer-stable --no-interaction
 
 script:
+    - composer validate --strict --no-check-lock
     - $TEST_COMMAND
-
-after_success:
-    - if [[ $COVERAGE = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-    - if [[ $COVERAGE = true ]]; then php ocular.phar code-coverage:upload --format=php-clover build/coverage.xml; fi
