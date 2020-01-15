@@ -14,6 +14,8 @@ use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
 use Shapin\TalkJS\Model\Conversation\ConversationJoined;
 use Shapin\TalkJS\Model\Conversation\ConversationLeft;
+use Shapin\TalkJS\Model\Conversation\MessageCollection;
+use Shapin\TalkJS\Model\Conversation\MessageCreated;
 use Shapin\TalkJS\Model\Conversation\ParticipationUpdated;
 
 final class ConversationTest extends TestCase
@@ -25,7 +27,7 @@ final class ConversationTest extends TestCase
         $this->api = $this->getTalkJSClient()->conversations();
     }
 
-    public function testCreateOrUpdate()
+    public function testAll()
     {
         $randomTestString = bin2hex(random_bytes(10));
         $conversationId = "conversation_$randomTestString";
@@ -96,5 +98,48 @@ final class ConversationTest extends TestCase
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
         $this->assertSame(['my_user' => ['notify' => false, 'access' => 'Read']], $conversation->getParticipants());
+
+        // Find messages: none should be found.
+        $messages = $this->api->findMessages($conversationId);
+        $this->assertInstanceOf(MessageCollection::class, $messages);
+        $this->assertCount(0, $messages);
+
+        // Post a new system message.
+        $messageCreated = $this->api->postSystemMessage($conversationId, 'An amazing system message', ['foo' => 'bar']);
+        $this->assertInstanceOf(MessageCreated::class, $messageCreated);
+
+        // We now have 1 available system message
+        $messages = $this->api->findMessages($conversationId);
+        $this->assertInstanceOf(MessageCollection::class, $messages);
+        $this->assertCount(1, $messages);
+        $message = reset($messages);
+        $this->assertTrue($message->isSystemMessage());
+        $this->assertSame('An amazing system message', $message->getText());
+        $this->assertNull($message->getSenderId());
+        $this->assertCount(0, $message->getReadBy());
+        $this->assertSame('rest', $message->getOrigin());
+        $this->assertNull($message->getLocation());
+        $this->assertSame(['foo' => 'bar'], $message->getCustom());
+        $this->assertSame($conversationId, $message->getConversationId());
+        $this->assertNull($message->getAttachment());
+
+        // Post a new user message.
+        $messageCreated = $this->api->postUserMessage($conversationId, 'my_user', 'An amazing user message');
+        $this->assertInstanceOf(MessageCreated::class, $messageCreated);
+
+        // We now have 2 available messages
+        $messages = $this->api->findMessages($conversationId);
+        $this->assertInstanceOf(MessageCollection::class, $messages);
+        $this->assertCount(2, $messages);
+        $message = reset($messages);
+        $this->assertTrue($message->isUserMessage());
+        $this->assertSame('An amazing user message', $message->getText());
+        $this->assertSame('my_user', $message->getSenderId());
+        $this->assertCount(0, $message->getReadBy());
+        $this->assertSame('rest', $message->getOrigin());
+        $this->assertNull($message->getLocation());
+        $this->assertSame([], $message->getCustom());
+        $this->assertSame($conversationId, $message->getConversationId());
+        $this->assertNull($message->getAttachment());
     }
 }
