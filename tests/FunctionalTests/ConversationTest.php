@@ -14,6 +14,7 @@ use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
 use Shapin\TalkJS\Model\Conversation\ConversationJoined;
 use Shapin\TalkJS\Model\Conversation\ConversationLeft;
+use Shapin\TalkJS\Model\Conversation\Message;
 use Shapin\TalkJS\Model\Conversation\MessageCollection;
 use Shapin\TalkJS\Model\Conversation\MessageCreated;
 use Shapin\TalkJS\Model\Conversation\ParticipationUpdated;
@@ -112,7 +113,8 @@ final class ConversationTest extends TestCase
         $messages = $this->api->findMessages($conversationId);
         $this->assertInstanceOf(MessageCollection::class, $messages);
         $this->assertCount(1, $messages);
-        $message = reset($messages);
+        $message = $messages->getIterator()->current();
+        $this->assertInstanceOf(Message::class, $message);
         $this->assertTrue($message->isSystemMessage());
         $this->assertSame('An amazing system message', $message->getText());
         $this->assertNull($message->getSenderId());
@@ -131,7 +133,8 @@ final class ConversationTest extends TestCase
         $messages = $this->api->findMessages($conversationId);
         $this->assertInstanceOf(MessageCollection::class, $messages);
         $this->assertCount(2, $messages);
-        $message = reset($messages);
+        $message = $messages->getIterator()->current();
+        $this->assertInstanceOf(Message::class, $message);
         $this->assertTrue($message->isUserMessage());
         $this->assertSame('An amazing user message', $message->getText());
         $this->assertSame('my_user', $message->getSenderId());
