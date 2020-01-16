@@ -101,4 +101,59 @@ final class Conversation extends HttpApi
 
         return $this->hydrator->hydrate($response, Model\Conversation\ConversationLeft::class);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function findMessages(string $conversationId, array $filters = []): Model\Conversation\MessageCollection
+    {
+        $response = $this->httpGet("conversations/$conversationId/messages", $filters);
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\MessageCollection::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function postSystemMessage(string $conversationId, string $text, array $custom = []): Model\Conversation\MessageCreated
+    {
+        $response = $this->httpPost("conversations/$conversationId/messages", [
+            [
+                'type' => 'SystemMessage',
+                'text' => $text,
+                'custom' => (object) $custom,
+            ],
+        ]);
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\MessageCreated::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function postUserMessage(string $conversationId, string $sender, string $text, array $custom = []): Model\Conversation\MessageCreated
+    {
+        $response = $this->httpPost("conversations/$conversationId/messages", [
+            [
+                'type' => 'UserMessage',
+                'sender' => $sender,
+                'text' => $text,
+                'custom' => (object) $custom,
+            ],
+        ]);
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\MessageCreated::class);
+    }
 }
