@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2020-01-16
+
+- Add messages related entry points
+- Improve BadRequestException
+
 ## [2.0.1] - 2019-07-29
 
 - Improve error handling
