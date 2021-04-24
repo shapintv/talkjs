@@ -10,7 +10,7 @@
 Via Composer
 
 ``` bash
-$ composer require shapintv/talkjs
+$ composer require shapin/talkjs
 ```
 
 ## Usage

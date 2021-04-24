@@ -19,10 +19,6 @@ final class Conversation extends HttpApi
      */
     public function createOrUpdate(string $id, array $params)
     {
-        if (!\array_key_exists('participants', $params) || 0 === \count($params['participants'])) {
-            throw new Exception\InvalidArgumentException('You need to specify at least 1 user when creating or updateing a conversation.');
-        }
-
         $response = $this->httpPut("conversations/$id", $params);
 
         if (200 !== $response->getStatusCode()) {
