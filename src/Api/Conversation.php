@@ -35,6 +35,24 @@ final class Conversation extends HttpApi
     /**
      * @throws Exception
      */
+    public function update(string $id, array $params)
+    {
+        if (empty($params)) {
+            throw new Exception\InvalidArgumentException('Params must be non-empty');
+        }
+
+        $response = $this->httpPut("conversations/$id", $params);
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\ConversationUpdated::class);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function get(string $id)
     {
         $response = $this->httpGet("conversations/$id");

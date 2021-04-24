@@ -14,6 +14,7 @@ use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
 use Shapin\TalkJS\Model\Conversation\ConversationJoined;
 use Shapin\TalkJS\Model\Conversation\ConversationLeft;
+use Shapin\TalkJS\Model\Conversation\ConversationUpdated;
 use Shapin\TalkJS\Model\Conversation\Message;
 use Shapin\TalkJS\Model\Conversation\MessageCollection;
 use Shapin\TalkJS\Model\Conversation\MessageCreated;
@@ -52,7 +53,7 @@ final class ConversationTest extends TestCase
         $this->assertSame(['Hello', 'World'], $conversation->getWelcomeMessages());
         $custom = $conversation->getCustom();
         $this->assertFalse(isset($custom['test']) && $randomTestString === $custom['test']);
-        $this->assertSame(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
+        $this->assertEquals(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
         $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
         $response = $this->api->createOrUpdate($conversationId, [
@@ -90,7 +91,7 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertSame(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
+        $this->assertEquals(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
 
         // Modify participation
         $participationUpdated = $this->api->updateParticipation($conversationId, 'my_user', ['notify' => false, 'access' => 'Read']);
@@ -98,7 +99,7 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertSame(['my_user' => ['notify' => false, 'access' => 'Read']], $conversation->getParticipants());
+        $this->assertEquals(['my_user' => ['notify' => false, 'access' => 'Read']], $conversation->getParticipants());
 
         // Find messages: none should be found.
         $messages = $this->api->findMessages($conversationId);
@@ -144,5 +145,37 @@ final class ConversationTest extends TestCase
         $this->assertSame([], $message->getCustom());
         $this->assertSame($conversationId, $message->getConversationId());
         $this->assertNull($message->getAttachment());
+    }
+
+    public function testShouldUpdateConversation()
+    {
+        $randomTestString = bin2hex(random_bytes(10));
+        $conversationId = "conversation_$randomTestString";
+
+        // create a new conversation in order to update it below
+        $newConversationResposne = $this->api->createOrUpdate($conversationId, [
+            'participants' => ['my_user'],
+            'subject' => 'Another amazing conversation',
+            'welcomeMessages' => ['Hello', 'World!'],
+            'photoUrl' => 'avatar_photo_url',
+            'custom' => ['Hello' => 'World']
+        ]);
+
+        $responseUpdate = $this->api->update($conversationId, [
+            'participants' => ['my_user'],
+            'subject' => 'An amazing conversation',
+            'welcomeMessages' => ['Hello', 'World!'],
+            'photoUrl' => 'another_photo_url',
+            'custom' => ['Hello' => 'World!']
+        ]);
+        $this->assertInstanceOf(ConversationUpdated::class, $responseUpdate);
+
+        /** @var Conversation $conversation */
+        $conversation = $this->api->get($conversationId);
+
+        $this->assertEquals('An amazing conversation', $conversation->getSubject());
+        $this->assertEquals(['Hello', 'World!'], $conversation->getWelcomeMessages());
+        $this->assertEquals('another_photo_url', $conversation->getPhotoUrl());
+        $this->assertEquals(['Hello' => 'World!'], $conversation->getCustom());
     }
 }
