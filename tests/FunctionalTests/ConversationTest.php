@@ -56,7 +56,6 @@ final class ConversationTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
         $response = $this->api->createOrUpdate($conversationId, [
-            'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
             'custom' => [
                 'test' => $randomTestString,
@@ -162,7 +161,6 @@ final class ConversationTest extends TestCase
 
         // update same conversation
         $responseUpdate = $this->api->createOrUpdate($conversationId, [
-            'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
             'welcomeMessages' => ['Hello', 'World!'],
             'photoUrl' => 'another_photo_url',
