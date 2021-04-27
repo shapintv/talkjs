@@ -14,7 +14,6 @@ use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
 use Shapin\TalkJS\Model\Conversation\ConversationJoined;
 use Shapin\TalkJS\Model\Conversation\ConversationLeft;
-use Shapin\TalkJS\Model\Conversation\ConversationUpdated;
 use Shapin\TalkJS\Model\Conversation\Message;
 use Shapin\TalkJS\Model\Conversation\MessageCollection;
 use Shapin\TalkJS\Model\Conversation\MessageCreated;
@@ -161,14 +160,14 @@ final class ConversationTest extends TestCase
             'custom' => ['Hello' => 'World']
         ]);
 
-        $responseUpdate = $this->api->update($conversationId, [
+        // update same conversation
+        $responseUpdate = $this->api->createOrUpdate($conversationId, [
             'participants' => ['my_user'],
             'subject' => 'An amazing conversation',
             'welcomeMessages' => ['Hello', 'World!'],
             'photoUrl' => 'another_photo_url',
             'custom' => ['Hello' => 'World!']
         ]);
-        $this->assertInstanceOf(ConversationUpdated::class, $responseUpdate);
 
         /** @var Conversation $conversation */
         $conversation = $this->api->get($conversationId);

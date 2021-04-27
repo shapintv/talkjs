@@ -19,10 +19,6 @@ final class Conversation extends HttpApi
      */
     public function createOrUpdate(string $id, array $params)
     {
-        if (!\array_key_exists('participants', $params) || 0 === \count($params['participants'])) {
-            throw new Exception\InvalidArgumentException('You need to specify at least 1 user when creating or updateing a conversation.');
-        }
-
         $response = $this->httpPut("conversations/$id", $params);
 
         if (200 !== $response->getStatusCode()) {
@@ -30,24 +26,6 @@ final class Conversation extends HttpApi
         }
 
         return $this->hydrator->hydrate($response, Model\Conversation\ConversationCreatedOrUpdated::class);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function update(string $id, array $params)
-    {
-        if (empty($params)) {
-            throw new Exception\InvalidArgumentException('Params must be non-empty');
-        }
-
-        $response = $this->httpPut("conversations/$id", $params);
-
-        if (200 !== $response->getStatusCode()) {
-            $this->handleErrors($response);
-        }
-
-        return $this->hydrator->hydrate($response, Model\Conversation\ConversationUpdated::class);
     }
 
     /**
