@@ -56,7 +56,9 @@ final class ConversationTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
         $response = $this->api->createOrUpdate($conversationId, [
-            'subject' => 'An amazing conversation',
+            'subject' => 'An amazing conversation!',
+            'welcomeMessages' => ['Hello', 'World!'],
+            'photoUrl' => 'another_photo_url',
             'custom' => [
                 'test' => $randomTestString,
             ],
@@ -70,6 +72,9 @@ final class ConversationTest extends TestCase
         $this->assertSame($conversationId, $conversation->getId());
         $custom = $conversation->getCustom();
         $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
+        $this->assertEquals('An amazing conversation!', $conversation->getSubject());
+        $this->assertEquals(['Hello', 'World!'], $conversation->getWelcomeMessages());
+        $this->assertEquals('another_photo_url', $conversation->getPhotoUrl());
 
         $collection = $this->api->find(['limit' => 50]);
         $this->assertInstanceOf(ConversationCollection::class, $collection);
@@ -143,36 +148,5 @@ final class ConversationTest extends TestCase
         $this->assertSame([], $message->getCustom());
         $this->assertSame($conversationId, $message->getConversationId());
         $this->assertNull($message->getAttachment());
-    }
-
-    public function testShouldUpdateConversation()
-    {
-        $randomTestString = bin2hex(random_bytes(10));
-        $conversationId = "conversation_$randomTestString";
-
-        // create a new conversation in order to update it below
-        $newConversationResposne = $this->api->createOrUpdate($conversationId, [
-            'participants' => ['my_user'],
-            'subject' => 'Another amazing conversation',
-            'welcomeMessages' => ['Hello', 'World!'],
-            'photoUrl' => 'avatar_photo_url',
-            'custom' => ['Hello' => 'World']
-        ]);
-
-        // update same conversation
-        $responseUpdate = $this->api->createOrUpdate($conversationId, [
-            'subject' => 'An amazing conversation',
-            'welcomeMessages' => ['Hello', 'World!'],
-            'photoUrl' => 'another_photo_url',
-            'custom' => ['Hello' => 'World!']
-        ]);
-
-        /** @var Conversation $conversation */
-        $conversation = $this->api->get($conversationId);
-
-        $this->assertEquals('An amazing conversation', $conversation->getSubject());
-        $this->assertEquals(['Hello', 'World!'], $conversation->getWelcomeMessages());
-        $this->assertEquals('another_photo_url', $conversation->getPhotoUrl());
-        $this->assertEquals(['Hello' => 'World!'], $conversation->getCustom());
     }
 }
