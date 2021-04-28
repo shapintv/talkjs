@@ -12,15 +12,14 @@ matrix:
     fast_finish: true
     include:
         # Test with lowest dependencies
-        - php: 7.3
+        - php: 7.4
           env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak"
 
-        # Test the latest stable release
-        - php: 7.3
         - php: 7.4
+        - php: 8.0
 
         # Dev dependencies
-        - php: 7.4
+        - php: 8.0
           env: STABILITY="dev"
 
     allow_failures:
