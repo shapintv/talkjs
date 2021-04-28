@@ -156,4 +156,18 @@ final class Conversation extends HttpApi
 
         return $this->hydrator->hydrate($response, Model\Conversation\MessageCreated::class);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function delete(string $conversationId): Model\Conversation\MessageDeleted
+    {
+        $response = $this->httpDelete("conversations/$conversationId");
+
+        if (200 !== $response->getStatusCode()) {
+            $this->handleErrors($response);
+        }
+
+        return $this->hydrator->hydrate($response, Model\Conversation\MessageDeleted::class);
+    }
 }
