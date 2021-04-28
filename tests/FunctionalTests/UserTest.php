@@ -16,7 +16,7 @@ final class UserTest extends TestCase
 {
     private $api;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->api = $this->getTalkJSClient()->users();
     }
