@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := help
 
 DIR := ${CURDIR}
-QA_IMAGE := jakzal/phpqa:php7.3-alpine
+QA_IMAGE := jakzal/phpqa:php8.0-alpine
 
 define say_red =
     echo "\033[31m$1\033[0m"
@@ -37,7 +37,9 @@ cs-fix: ## Apply Check styles
 phpstan: ## Run PHPStan
 	@docker run --rm -v $(DIR):/project -w /project $(QA_IMAGE) phpstan analyse
 
-test: cs-lint phpstan ## Launch tests
+phpunit: ## Run PHPUnit
 	@rm -rf ./tests/app/var ./tests/app/cache
 	@$(call say_green,"==\> Launch unit tests")
 	@vendor/bin/phpunit
+
+test: phpunit cs-lint phpstan ## Launch tests

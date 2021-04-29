@@ -23,7 +23,7 @@ final class ConversationTest extends TestCase
 {
     private $api;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->api = $this->getTalkJSClient()->conversations();
     }
@@ -52,7 +52,7 @@ final class ConversationTest extends TestCase
         $this->assertSame(['Hello', 'World'], $conversation->getWelcomeMessages());
         $custom = $conversation->getCustom();
         $this->assertFalse(isset($custom['test']) && $randomTestString === $custom['test']);
-        $this->assertEquals(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
+        $this->assertSame(['my_user' => ['access' => 'ReadWrite', 'notify' => true]], $conversation->getParticipants());
         $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
         $response = $this->api->createOrUpdate($conversationId, [
@@ -94,7 +94,7 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertEquals(['my_user' => ['notify' => true, 'access' => 'ReadWrite']], $conversation->getParticipants());
+        $this->assertSame(['my_user' => ['access' => 'ReadWrite', 'notify' => true]], $conversation->getParticipants());
 
         // Modify participation
         $participationUpdated = $this->api->updateParticipation($conversationId, 'my_user', ['notify' => false, 'access' => 'Read']);
@@ -102,7 +102,7 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertEquals(['my_user' => ['notify' => false, 'access' => 'Read']], $conversation->getParticipants());
+        $this->assertSame(['my_user' => ['access' => 'Read', 'notify' => false]], $conversation->getParticipants());
 
         // Find messages: none should be found.
         $messages = $this->api->findMessages($conversationId);
