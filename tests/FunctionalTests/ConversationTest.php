@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Tests\FunctionalTests;
 
+use Shapin\TalkJS\Exception\Domain\NotFoundException;
 use Shapin\TalkJS\Model\Conversation\Conversation;
 use Shapin\TalkJS\Model\Conversation\ConversationCollection;
 use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
@@ -17,6 +18,7 @@ use Shapin\TalkJS\Model\Conversation\ConversationLeft;
 use Shapin\TalkJS\Model\Conversation\Message;
 use Shapin\TalkJS\Model\Conversation\MessageCollection;
 use Shapin\TalkJS\Model\Conversation\MessageCreated;
+use Shapin\TalkJS\Model\Conversation\MessageDeleted;
 use Shapin\TalkJS\Model\Conversation\ParticipationUpdated;
 
 final class ConversationTest extends TestCase
@@ -148,5 +150,30 @@ final class ConversationTest extends TestCase
         $this->assertSame([], $message->getCustom());
         $this->assertSame($conversationId, $message->getConversationId());
         $this->assertNull($message->getAttachment());
+    }
+
+    public function testShouldDeleteConversation()
+    {
+        $randomTestString = bin2hex(random_bytes(10));
+        $conversationId = "conversation_$randomTestString";
+
+        // create a new conversation to delete it
+        $this->api->createOrUpdate($conversationId, [
+            'participants' => ['my_user'],
+            'subject' => 'An amazing conversation',
+            'welcomeMessages' => ['Hello', 'World'],
+            'photoUrl' => 'photo_url',
+        ]);
+
+        $conversation = $this->api->get($conversationId);
+        $this->assertEquals($conversationId, $conversation->getId());
+
+        // delete the conversation
+        $messageDeleted = $this->api->delete($conversationId);
+        $this->assertInstanceOf(MessageDeleted::class, $messageDeleted);
+
+        // unable to retrieve deleted conversation
+        $this->expectException(NotFoundException::class);
+        $conversation = $this->api->get($conversationId);
     }
 }
