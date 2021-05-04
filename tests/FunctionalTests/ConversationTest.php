@@ -56,8 +56,9 @@ final class ConversationTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
 
         $response = $this->api->createOrUpdate($conversationId, [
-            'participants' => ['my_user'],
-            'subject' => 'An amazing conversation',
+            'subject' => 'An amazing conversation!',
+            'welcomeMessages' => ['Hello', 'World!'],
+            'photoUrl' => 'another_photo_url',
             'custom' => [
                 'test' => $randomTestString,
             ],
@@ -71,6 +72,9 @@ final class ConversationTest extends TestCase
         $this->assertSame($conversationId, $conversation->getId());
         $custom = $conversation->getCustom();
         $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
+        $this->assertEquals('An amazing conversation!', $conversation->getSubject());
+        $this->assertEquals(['Hello', 'World!'], $conversation->getWelcomeMessages());
+        $this->assertEquals('another_photo_url', $conversation->getPhotoUrl());
 
         $collection = $this->api->find(['limit' => 50]);
         $this->assertInstanceOf(ConversationCollection::class, $collection);
