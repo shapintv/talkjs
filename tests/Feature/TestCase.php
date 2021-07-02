@@ -16,8 +16,8 @@ abstract class TestCase extends BaseTestCase
 {
     public function getTalkJSClient(): TalkJSClient
     {
-        $appId = 'toQncizZ';
-        $secretKey = 'sk_test_3y3JDebNoA4mUhRUD7IBM8b7';
+        $appId = '';
+        $secretKey = '';
         return new TalkJSClient($appId, $secretKey);
     }
 }
