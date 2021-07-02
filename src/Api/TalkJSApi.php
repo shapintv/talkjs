@@ -30,6 +30,7 @@ abstract class TalkJSApi
 
     /**
      * Send a GET request with query parameters.
+     * @throws TransportExceptionInterface
      */
     protected function httpGet(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -38,6 +39,7 @@ abstract class TalkJSApi
 
     /**
      * Send a POST request with JSON-encoded parameters.
+     * @throws TransportExceptionInterface
      */
     protected function httpPost(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -46,6 +48,7 @@ abstract class TalkJSApi
 
     /**
      * Send a PUT request with JSON-encoded parameters.
+     * @throws TransportExceptionInterface
      */
     protected function httpPut(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -54,6 +57,7 @@ abstract class TalkJSApi
 
     /**
      * Send a PATCH request with JSON-encoded parameters.
+     * @throws TransportExceptionInterface
      */
     protected function httpPatch(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -62,6 +66,7 @@ abstract class TalkJSApi
 
     /**
      * Send a DELETE request with JSON-encoded parameters.
+     * @throws TransportExceptionInterface
      */
     protected function httpDelete(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
@@ -123,7 +128,7 @@ abstract class TalkJSApi
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    protected function parseResponse(ResponseInterface $response): array
+    protected function parseResponseData(ResponseInterface $response): array
     {
         if ($response->getStatusCode() !== 200) {
             switch ($response->getStatusCode()) {

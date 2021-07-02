@@ -9,13 +9,14 @@ declare(strict_types=1);
 
 namespace CarAndClassic\TalkJS;
 
-use CarAndClassic\TalkJS\Hydrator\ModelHydrator;
+use CarAndClassic\TalkJS\Api\ConversationApi;
+use CarAndClassic\TalkJS\Api\UserApi;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class TalkJSClient
 {
-    private $httpClient;
-    private $hydrator;
+    private HttpClientInterface $httpClient;
 
     public function __construct(string $appId, string $secretKey)
     {
@@ -26,16 +27,15 @@ final class TalkJSClient
                 'Content-Type' => 'application/json',
             ],
         ]);
-        $this->hydrator = new ModelHydrator();
     }
 
-    public function users(): Api\UserApi
+    public function users(): UserApi
     {
-        return new Api\UserApi($this->httpClient, $this->hydrator);
+        return new UserApi($this->httpClient);
     }
 
-    public function conversations(): Api\ConversationApi
+    public function conversations(): ConversationApi
     {
-        return new Api\ConversationApi($this->httpClient, $this->hydrator);
+        return new ConversationApi($this->httpClient);
     }
 }
