@@ -9,36 +9,30 @@ declare(strict_types=1);
 
 namespace CarAndClassic\TalkJS\Api;
 
-use CarAndClassic\TalkJS\Exception;
-use CarAndClassic\TalkJS\Model;
+use CarAndClassic\TalkJS\Models\User;
+use CarAndClassic\TalkJS\Models\UserCreatedOrUpdated;
+use Exception;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 final class UserApi extends TalkJSApi
 {
     /**
-     * @throws Exception
+     * @throws Exception|TransportExceptionInterface
      */
-    public function createOrUpdate(string $id, array $params)
+    public function createOrUpdate(string $id, array $params): UserCreatedOrUpdated
     {
-        $response = $this->httpPut("users/$id", $params);
+        $data = $this->parseResponseData($this->httpPut("users/$id", $params));
 
-        if (200 !== $response->getStatusCode()) {
-            $this->handleErrors($response);
-        }
-
-        return $this->hydrator->hydrate($response, Model\User\UserCreatedOrUpdated::class);
+        return new UserCreatedOrUpdated();
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|TransportExceptionInterface
      */
-    public function get(string $id)
+    public function get(string $id): User
     {
-        $response = $this->httpGet("users/$id");
+        $data = $this->parseResponseData($this->httpGet("users/$id"));
 
-        if (200 !== $response->getStatusCode()) {
-            $this->handleErrors($response);
-        }
-
-        return $this->hydrator->hydrate($response, Model\User\User::class);
+        return User::createFromArray($data['data']);
     }
 }
