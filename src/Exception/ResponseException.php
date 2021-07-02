@@ -11,6 +11,6 @@ namespace CarAndClassic\TalkJS\Exception;
 
 use CarAndClassic\TalkJS\Exception;
 
-class HydrationException extends \RuntimeException implements Exception
+class ResponseException extends \RuntimeException implements Exception
 {
 }

@@ -11,6 +11,6 @@ namespace CarAndClassic\TalkJS\Exception;
 
 use CarAndClassic\TalkJS\Exception;
 
-interface DomainException extends Exception
+interface ApiException extends Exception
 {
 }

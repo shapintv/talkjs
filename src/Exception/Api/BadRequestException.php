@@ -7,12 +7,12 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJS\Exception\Domain;
+namespace CarAndClassic\TalkJS\Exception\Api;
 
-use CarAndClassic\TalkJS\Exception\DomainException;
+use CarAndClassic\TalkJS\Exception\ApiException;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class BadRequestException extends \Exception implements DomainException
+class BadRequestException extends \Exception implements ApiException
 {
     protected $response;
 
