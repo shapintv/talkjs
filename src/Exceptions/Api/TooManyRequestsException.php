@@ -7,10 +7,8 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJS\Exception;
+namespace CarAndClassic\TalkJS\Exceptions\Api;
 
-use CarAndClassic\TalkJS\Exception;
-
-class InvalidArgumentException extends \InvalidArgumentException implements Exception
+final class TooManyRequestsException extends \Exception
 {
 }

@@ -7,12 +7,11 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJS\Exception\Api;
+namespace CarAndClassic\TalkJS\Exceptions\Api;
 
-use CarAndClassic\TalkJS\Exception\ApiException;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class BadRequestException extends \Exception implements ApiException
+final class UnknownErrorException extends \Exception
 {
     protected $response;
 
@@ -21,7 +20,17 @@ class BadRequestException extends \Exception implements ApiException
         $this->response = $response;
         $content = json_decode($response->getContent(false), true);
 
-        parent::__construct('Bad request. Content: '.json_encode($content));
+        if (!isset($content['reasons'])) {
+            parent::__construct('Unknown error: No reason.');
+
+            return;
+        }
+
+        $field = array_key_first($content['reasons']);
+        $reasons = reset($content['reasons']);
+        $reason = \is_array($reasons) ? $reasons[0] : $reasons;
+
+        parent::__construct("Unknown error: Field $field: $reason.");
     }
 
     public function getResponse(): ResponseInterface
