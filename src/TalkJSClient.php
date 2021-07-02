@@ -7,30 +7,35 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS;
+namespace CarAndClassic\TalkJs;
 
-use Shapin\TalkJS\Hydrator\Hydrator;
-use Shapin\TalkJS\Hydrator\ModelHydrator;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use CarAndClassic\TalkJs\Hydrator\ModelHydrator;
+use Symfony\Component\HttpClient\HttpClient;
 
-final class TalkJSClient
+final class TalkJsClient
 {
     private $httpClient;
     private $hydrator;
 
-    public function __construct(HttpClientInterface $talkjsClient, Hydrator $hydrator = null)
+    public function __construct(string $appId, string $secretKey)
     {
-        $this->httpClient = $talkjsClient;
-        $this->hydrator = $hydrator ?: new ModelHydrator();
+        $this->httpClient = HttpClient::create([
+            'base_uri' => 'https://api.talkjs.com/v1/'.$appId.'/',
+            'auth_bearer' => $secretKey,
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $this->hydrator = new ModelHydrator();
     }
 
-    public function users(): Api\User
+    public function users(): Api\UserApi
     {
-        return new Api\User($this->httpClient, $this->hydrator);
+        return new Api\UserApi($this->httpClient, $this->hydrator);
     }
 
-    public function conversations(): Api\Conversation
+    public function conversations(): Api\ConversationApi
     {
-        return new Api\Conversation($this->httpClient, $this->hydrator);
+        return new Api\ConversationApi($this->httpClient, $this->hydrator);
     }
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Shapin\TalkJS\Model\User;
+namespace CarAndClassic\TalkJs\Model\User;
 
-use Shapin\TalkJS\Model\CreatableFromArray;
+use CarAndClassic\TalkJs\Model\CreatableFromArray;
 
 class User implements CreatableFromArray
 {

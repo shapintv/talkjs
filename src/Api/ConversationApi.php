@@ -7,12 +7,12 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Api;
+namespace CarAndClassic\TalkJs\Api;
 
-use Shapin\TalkJS\Exception;
-use Shapin\TalkJS\Model;
+use CarAndClassic\TalkJs\Exception;
+use CarAndClassic\TalkJs\Model;
 
-final class Conversation extends HttpApi
+final class ConversationApi extends TalkJsApi
 {
     /**
      * @throws Exception

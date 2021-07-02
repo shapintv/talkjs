@@ -1,12 +1,12 @@
 {
-    "name": "shapin/talkjs",
+    "name": "carandclassic/talkjs",
     "description": "PHP client for talk.js API",
     "license": "MIT",
     "keywords": ["api", "chat", "talk", "talkjs"],
     "authors": [
         {
-            "name": "Olivier Dolbeau",
-            "email": "olivier@bbnt.me"
+            "name": "Car & Classic",
+            "email": "technical@carandclassic.com"
         }
     ],
     "require": {
@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Shapin\\TalkJS\\": "src/"
+            "CarAndClassic\\TalkJs\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Shapin\\TalkJS\\Tests\\": "tests/"
+            "CarAndClassic\\TalkJs\\Tests\\": "tests/"
         }
     },
     "scripts": {

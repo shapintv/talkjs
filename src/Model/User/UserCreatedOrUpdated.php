@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shapin\TalkJS\Model\User;
+namespace CarAndClassic\TalkJs\Model\User;
 
 class UserCreatedOrUpdated
 {

@@ -7,7 +7,7 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS;
+namespace CarAndClassic\TalkJs;
 
 interface Exception extends \Throwable
 {

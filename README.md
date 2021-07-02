@@ -1,8 +1,7 @@
-# TalkJS PHP SDK
+# TalkJs PHP SDK
 
-[![Latest version](https://img.shields.io/github/release/shapintv/talkjs.svg?style=flat-square)](https://github.com/shapintv/talkjs/releases)
-[![Build status](https://img.shields.io/travis/shapintv/talkjs.svg?style=flat-square)](https://travis-ci.com/shapintv/talkjs)
-[![Total downloads](https://img.shields.io/packagist/dt/shapin/talkjs.svg?style=flat-square)](https://packagist.org/packages/shapin/talkjs)
+[![Latest version](https://img.shields.io/github/release/CarAndClassic/talkjs.svg?style=flat-square)](https://github.com/CarAndClassic/talkjs/releases)
+[![Total downloads](https://img.shields.io/packagist/dt/CarAndClassic/talkjs.svg?style=flat-square)](https://packagist.org/packages/CarAndClassic/talkjs)
 
 
 ## Install
@@ -10,60 +9,54 @@
 Via Composer
 
 ``` bash
-$ composer require shapin/talkjs
+$ composer require CarAndClassic/talkjs
 ```
 
 ## Usage
 
-### Create a `TalkJSClient`
+### Create a `TalkJsClient`
 
 ```php
-use Shapin\TalkJS\TalkJSClient;
-use Symfony\Component\HttpClient\HttpClient;
-
-$httpClient = HttpClient::create([
-    'base_uri' => 'https://api.talkjs.com/v1/'.self::APP_ID.'/',
-    'auth_bearer' => self::SECRET_KEY,
-    'headers' => [
-        'Content-Type' => 'application/json',
-    ],
-]);
-
-$talkJSClient = new TalkJSClient($httpClient);
+use CarAndClassic\TalkJs\TalkJsClient;
+$talkJSClient = new TalkJsClient($appId, $secretKey);
 ```
 
-### Deal with users
+### Users
 
 ```php
 // Create or update a user
-$client->users()->createOrUpdate('my_custom_id', [
+$talkJsClient->users()->createOrUpdate('my_custom_id', [
     'email' => 'georges@abitbol.com',
 ]);
 
 // Retrieve a user
-$user = $client->users()->get('my_custom_id');
+$user = $talkJsClient->users()->get('my_custom_id');
 ```
 
-### Deal with conversations
+### Conversations
 
 ```php
-// Create or update a user
-$client->conversations()->createOrUpdate('my_custom_id', [
+// Create or update a conversation
+$talkJsClient->conversations()->createOrUpdate('my_custom_id', [
     'subject' => 'My new conversation',
 ]);
 
 // Retrive a conversation
-$conversation = $client->conversations()->get('my_custom_id');
+$conversation = $talkJsClient->conversations()->get('my_custom_id');
 
 // Find conversations
-$conversations = $client->conversations()->find();
+$conversations = $talkJsClient->conversations()->find();
 
 // Join a conversation
-$client->conversation()->join('my_conversation_id', 'my_user_id');
+$talkJsClient->conversation()->join('my_conversation_id', 'my_user_id');
 
 // Leave a conversation
-$client->conversation()->leave('my_conversation_id', 'my_user_id');
+$talkJsClient->conversation()->leave('my_conversation_id', 'my_user_id');
 ```
+
+### Messages
+
+
 
 ### Integration with symfony
 
@@ -84,7 +77,7 @@ Then create your service:
 
 ```yml
 services:
-    Shapin\TalkJS\TalkJSClient: ~
+    CarAndClassic\TalkJs\TalkJsClient: ~
 ```
 
 You're done!

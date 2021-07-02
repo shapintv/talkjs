@@ -7,17 +7,17 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Tests\FunctionalTests;
+namespace CarAndClassic\TalkJs\Tests\FunctionalTests;
 
-use Shapin\TalkJS\Model\Conversation\Conversation;
-use Shapin\TalkJS\Model\Conversation\ConversationCollection;
-use Shapin\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
-use Shapin\TalkJS\Model\Conversation\ConversationJoined;
-use Shapin\TalkJS\Model\Conversation\ConversationLeft;
-use Shapin\TalkJS\Model\Conversation\Message;
-use Shapin\TalkJS\Model\Conversation\MessageCollection;
-use Shapin\TalkJS\Model\Conversation\MessageCreated;
-use Shapin\TalkJS\Model\Conversation\ParticipationUpdated;
+use CarAndClassic\TalkJs\Model\Conversation\Conversation;
+use CarAndClassic\TalkJs\Model\Conversation\ConversationCollection;
+use CarAndClassic\TalkJs\Model\Conversation\ConversationCreatedOrUpdated;
+use CarAndClassic\TalkJs\Model\Conversation\ConversationJoined;
+use CarAndClassic\TalkJs\Model\Conversation\ConversationLeft;
+use CarAndClassic\TalkJs\Model\Conversation\Message;
+use CarAndClassic\TalkJs\Model\Conversation\MessageCollection;
+use CarAndClassic\TalkJs\Model\Conversation\MessageCreated;
+use CarAndClassic\TalkJs\Model\Conversation\ParticipationUpdated;
 
 final class ConversationTest extends TestCase
 {
@@ -25,7 +25,7 @@ final class ConversationTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->api = $this->getTalkJSClient()->conversations();
+        $this->api = $this->getTalkJsClient()->conversations();
     }
 
     public function testAll()

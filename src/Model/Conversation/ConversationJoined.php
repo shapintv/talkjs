@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shapin\TalkJS\Model\Conversation;
+namespace CarAndClassic\TalkJs\Model\Conversation;
 
 class ConversationJoined
 {

@@ -7,9 +7,9 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Exception\Domain;
+namespace CarAndClassic\TalkJs\Exception\Domain;
 
-use Shapin\TalkJS\Exception\DomainException;
+use CarAndClassic\TalkJs\Exception\DomainException;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class BadRequestException extends \Exception implements DomainException

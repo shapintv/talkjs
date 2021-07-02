@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Shapin\TalkJS\Model\Conversation;
+namespace CarAndClassic\TalkJs\Model\Conversation;
 
-use Shapin\TalkJS\Model\CreatableFromArray;
+use CarAndClassic\TalkJs\Model\CreatableFromArray;
 
 class Message implements CreatableFromArray
 {

@@ -7,19 +7,19 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Api;
+namespace CarAndClassic\TalkJs\Api;
 
-use Shapin\TalkJS\Exception\Domain as DomainExceptions;
-use Shapin\TalkJS\Exception\DomainException;
-use Shapin\TalkJS\Exception\LogicException;
-use Shapin\TalkJS\Hydrator\Hydrator;
+use CarAndClassic\TalkJs\Exception\Domain as DomainExceptions;
+use CarAndClassic\TalkJs\Exception\DomainException;
+use CarAndClassic\TalkJs\Exception\LogicException;
+use CarAndClassic\TalkJs\Hydrator\Hydrator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-abstract class HttpApi
+abstract class TalkJsApi
 {
-    protected $httpClient;
-    protected $hydrator;
+    protected HttpClientInterface $httpClient;
+    protected Hydrator $hydrator;
 
     public function __construct(HttpClientInterface $httpClient, Hydrator $hydrator)
     {

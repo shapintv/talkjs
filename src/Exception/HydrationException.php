@@ -7,9 +7,9 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Exception;
+namespace CarAndClassic\TalkJs\Exception;
 
-use Shapin\TalkJS\Exception;
+use CarAndClassic\TalkJs\Exception;
 
 class HydrationException extends \RuntimeException implements Exception
 {
