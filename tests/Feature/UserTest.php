@@ -7,18 +7,19 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJS\Tests\FunctionalTests;
+namespace CarAndClassic\TalkJS\Tests\Feature;
 
-use CarAndClassic\TalkJS\Model\User\User;
-use CarAndClassic\TalkJS\Model\User\UserCreatedOrUpdated;
+use CarAndClassic\TalkJS\Api\UserApi;
+use CarAndClassic\TalkJS\Models\User;
+use CarAndClassic\TalkJS\Models\UserCreatedOrUpdated;
 
 final class UserTest extends TestCase
 {
-    private $api;
+    private UserApi $api;
 
     protected function setUp(): void
     {
-        $this->api = $this->getTalkJSClient()->users();
+        $this->api = $this->getTalkJSClient()->userApi;
     }
 
     public function testCreateOrUpdate()
@@ -39,18 +40,18 @@ final class UserTest extends TestCase
         $user = $this->api->get('my_user');
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertSame('my_user', $user->getId());
-        $this->assertSame('Georges Abitbol', $user->getName());
-        $this->assertSame('welcome', $user->getWelcomeMessage());
-        $this->assertSame('photo_url', $user->getPhotoUrl());
-        $this->assertSame('role', $user->getRole());
-        $this->assertSame(['georges@abitbol.fr'], $user->getEmail());
-        $this->assertSame([], $user->getPhone());
-        $custom = $user->getCustom();
+        $this->assertSame('my_user', $user->id);
+        $this->assertSame('Georges Abitbol', $user->name);
+        $this->assertSame('welcome', $user->welcomeMessage);
+        $this->assertSame('photo_url', $user->photoUrl);
+        $this->assertSame('role', $user->role);
+        $this->assertSame(['georges@abitbol.fr'], $user->email);
+        $this->assertSame([], $user->phone);
+        $custom = $user->custom;
         $this->assertFalse(isset($custom['test']) && $randomTestString === $custom['test']);
-        $this->assertNull($user->getAvailabilityText());
-        $this->assertSame('fr', $user->getLocale());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $user->getCreatedAt());
+        $this->assertNull($user->availabilityText);
+        $this->assertSame('fr', $user->locale);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $user->createdAt);
 
         $response = $this->api->createOrUpdate('my_user', [
             'name' => 'Georges Abitbol',
@@ -64,8 +65,8 @@ final class UserTest extends TestCase
         $user = $this->api->get('my_user');
         $this->assertInstanceOf(User::class, $user);
 
-        $this->assertSame('my_user', $user->getId());
-        $custom = $user->getCustom();
+        $this->assertSame('my_user', $user->id);
+        $custom = $user->custom;
         $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
     }
 }

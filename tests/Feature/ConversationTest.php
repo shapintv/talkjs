@@ -7,25 +7,24 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJS\Tests\FunctionalTests;
+namespace CarAndClassic\TalkJS\Tests\Feature;
 
-use CarAndClassic\TalkJS\Model\Conversation\Conversation;
-use CarAndClassic\TalkJS\Model\Conversation\ConversationCollection;
-use CarAndClassic\TalkJS\Model\Conversation\ConversationCreatedOrUpdated;
-use CarAndClassic\TalkJS\Model\Conversation\ConversationJoined;
-use CarAndClassic\TalkJS\Model\Conversation\ConversationLeft;
-use CarAndClassic\TalkJS\Model\Conversation\Message;
-use CarAndClassic\TalkJS\Model\Conversation\MessageCollection;
-use CarAndClassic\TalkJS\Model\Conversation\MessageCreated;
-use CarAndClassic\TalkJS\Model\Conversation\ParticipationUpdated;
+use CarAndClassic\TalkJS\Api\ConversationApi;
+use CarAndClassic\TalkJS\Models\Conversation;
+use CarAndClassic\TalkJS\Models\ConversationCreatedOrUpdated;
+use CarAndClassic\TalkJS\Models\ConversationJoined;
+use CarAndClassic\TalkJS\Models\ConversationLeft;
+use CarAndClassic\TalkJS\Models\Message;
+use CarAndClassic\TalkJS\Models\MessageCreated;
+use CarAndClassic\TalkJS\Models\ParticipationUpdated;
 
 final class ConversationTest extends TestCase
 {
-    private $api;
+    private ConversationApi $api;
 
     protected function setUp(): void
     {
-        $this->api = $this->getTalkJSClient()->conversations();
+        $this->api = $this->getTalkJSClient()->conversationApi;
     }
 
     public function testAll()
@@ -45,15 +44,15 @@ final class ConversationTest extends TestCase
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
 
-        $this->assertSame($conversationId, $conversation->getId());
-        $this->assertSame('An amazing conversation', $conversation->getSubject());
-        $this->assertNull($conversation->getTopicId());
-        $this->assertSame('photo_url', $conversation->getPhotoUrl());
-        $this->assertSame(['Hello', 'World'], $conversation->getWelcomeMessages());
-        $custom = $conversation->getCustom();
+        $this->assertSame($conversationId, $conversation->id);
+        $this->assertSame('An amazing conversation', $conversation->subject);
+        $this->assertNull($conversation->topicId);
+        $this->assertSame('photo_url', $conversation->photoUrl);
+        $this->assertSame(['Hello', 'World'], $conversation->welcomeMessages);
+        $custom = $conversation->custom;
         $this->assertFalse(isset($custom['test']) && $randomTestString === $custom['test']);
-        $this->assertSame(['my_user' => ['access' => 'ReadWrite', 'notify' => true]], $conversation->getParticipants());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->getCreatedAt());
+        $this->assertSame(['my_user' => ['access' => 'ReadWrite', 'notify' => true]], $conversation->participants);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $conversation->createdAt);
 
         $response = $this->api->createOrUpdate($conversationId, [
             'subject' => 'An amazing conversation!',
@@ -69,15 +68,15 @@ final class ConversationTest extends TestCase
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
 
-        $this->assertSame($conversationId, $conversation->getId());
-        $custom = $conversation->getCustom();
+        $this->assertSame($conversationId, $conversation->id);
+        $custom = $conversation->custom;
         $this->assertTrue(isset($custom['test']) && $randomTestString === $custom['test']);
-        $this->assertEquals('An amazing conversation!', $conversation->getSubject());
-        $this->assertEquals(['Hello', 'World!'], $conversation->getWelcomeMessages());
-        $this->assertEquals('another_photo_url', $conversation->getPhotoUrl());
+        $this->assertEquals('An amazing conversation!', $conversation->subject);
+        $this->assertEquals(['Hello', 'World!'], $conversation->welcomeMessages);
+        $this->assertEquals('another_photo_url', $conversation->photoUrl);
 
         $collection = $this->api->find(['limit' => 50]);
-        $this->assertInstanceOf(ConversationCollection::class, $collection);
+        $this->assertIsArray($collection);
         $this->assertTrue($collection->contains($conversationId));
 
         // Delete my_user from participants
@@ -86,7 +85,7 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertSame([], $conversation->getParticipants());
+        $this->assertSame([], $conversation->participants);
 
         // Add user back in participants
         $conversationJoined = $this->api->join($conversationId, 'my_user');
@@ -94,7 +93,7 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertSame(['my_user' => ['access' => 'ReadWrite', 'notify' => true]], $conversation->getParticipants());
+        $this->assertSame(['my_user' => ['access' => 'ReadWrite', 'notify' => true]], $conversation->participants);
 
         // Modify participation
         $participationUpdated = $this->api->updateParticipation($conversationId, 'my_user', ['notify' => false, 'access' => 'Read']);
@@ -102,11 +101,11 @@ final class ConversationTest extends TestCase
 
         $conversation = $this->api->get($conversationId);
         $this->assertInstanceOf(Conversation::class, $conversation);
-        $this->assertSame(['my_user' => ['access' => 'Read', 'notify' => false]], $conversation->getParticipants());
+        $this->assertSame(['my_user' => ['access' => 'Read', 'notify' => false]], $conversation->participants);
 
         // Find messages: none should be found.
         $messages = $this->api->findMessages($conversationId);
-        $this->assertInstanceOf(MessageCollection::class, $messages);
+        $this->assertIsArray($messages);
         $this->assertCount(0, $messages);
 
         // Post a new system message.
@@ -115,19 +114,19 @@ final class ConversationTest extends TestCase
 
         // We now have 1 available system message
         $messages = $this->api->findMessages($conversationId);
-        $this->assertInstanceOf(MessageCollection::class, $messages);
+        $this->assertIsArray($messages);
         $this->assertCount(1, $messages);
-        $message = $messages->getIterator()->current();
+        $message = $messages[0];
         $this->assertInstanceOf(Message::class, $message);
         $this->assertTrue($message->isSystemMessage());
-        $this->assertSame('An amazing system message', $message->getText());
-        $this->assertNull($message->getSenderId());
-        $this->assertCount(0, $message->getReadBy());
-        $this->assertSame('rest', $message->getOrigin());
-        $this->assertNull($message->getLocation());
-        $this->assertSame(['foo' => 'bar'], $message->getCustom());
-        $this->assertSame($conversationId, $message->getConversationId());
-        $this->assertNull($message->getAttachment());
+        $this->assertSame('An amazing system message', $message->text);
+        $this->assertNull($message->senderId);
+        $this->assertCount(0, $message->readBy);
+        $this->assertSame('rest', $message->origin);
+        $this->assertNull($message->location);
+        $this->assertSame(['foo' => 'bar'], $message->custom);
+        $this->assertSame($conversationId, $message->conversationId);
+        $this->assertNull($message->attachment);
 
         // Post a new user message.
         $messageCreated = $this->api->postUserMessage($conversationId, 'my_user', 'An amazing user message');
@@ -135,18 +134,18 @@ final class ConversationTest extends TestCase
 
         // We now have 2 available messages
         $messages = $this->api->findMessages($conversationId);
-        $this->assertInstanceOf(MessageCollection::class, $messages);
+        $this->assertIsArray($messages);
         $this->assertCount(2, $messages);
-        $message = $messages->getIterator()->current();
+        $message = $messages[0];
         $this->assertInstanceOf(Message::class, $message);
         $this->assertTrue($message->isUserMessage());
-        $this->assertSame('An amazing user message', $message->getText());
-        $this->assertSame('my_user', $message->getSenderId());
-        $this->assertCount(0, $message->getReadBy());
-        $this->assertSame('rest', $message->getOrigin());
-        $this->assertNull($message->getLocation());
-        $this->assertSame([], $message->getCustom());
-        $this->assertSame($conversationId, $message->getConversationId());
-        $this->assertNull($message->getAttachment());
+        $this->assertSame('An amazing user message', $message->text);
+        $this->assertSame('my_user', $message->senderId);
+        $this->assertCount(0, $message->readBy);
+        $this->assertSame('rest', $message->origin);
+        $this->assertNull($message->location);
+        $this->assertSame([], $message->custom);
+        $this->assertSame($conversationId, $message->conversationId);
+        $this->assertNull($message->attachment);
     }
 }
