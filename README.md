@@ -9,7 +9,7 @@
 Via Composer
 
 ``` bash
-$ composer require CarAndClassic/talkjs
+$ composer require carandclassic/talkjs
 ```
 
 ## Usage
