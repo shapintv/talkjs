@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CarAndClassic\TalkJs\Model\Conversation;
+namespace CarAndClassic\TalkJS\Model\Conversation;
 
 class ConversationCreatedOrUpdated
 {

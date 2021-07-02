@@ -7,16 +7,16 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Api;
+namespace CarAndClassic\TalkJS\Api;
 
-use CarAndClassic\TalkJs\Exception\Domain as DomainExceptions;
-use CarAndClassic\TalkJs\Exception\DomainException;
-use CarAndClassic\TalkJs\Exception\LogicException;
-use CarAndClassic\TalkJs\Hydrator\Hydrator;
+use CarAndClassic\TalkJS\Exception\Domain as DomainExceptions;
+use CarAndClassic\TalkJS\Exception\DomainException;
+use CarAndClassic\TalkJS\Exception\LogicException;
+use CarAndClassic\TalkJS\Hydrator\Hydrator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-abstract class TalkJsApi
+abstract class TalkJSApi
 {
     protected HttpClientInterface $httpClient;
     protected Hydrator $hydrator;

@@ -7,9 +7,9 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Exception;
+namespace CarAndClassic\TalkJS\Exception;
 
-use CarAndClassic\TalkJs\Exception;
+use CarAndClassic\TalkJS\Exception;
 
 class LogicException extends \LogicException implements Exception
 {

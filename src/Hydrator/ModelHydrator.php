@@ -7,10 +7,10 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Hydrator;
+namespace CarAndClassic\TalkJS\Hydrator;
 
-use CarAndClassic\TalkJs\Exception\HydrationException;
-use CarAndClassic\TalkJs\Model\CreatableFromArray;
+use CarAndClassic\TalkJS\Exception\HydrationException;
+use CarAndClassic\TalkJS\Model\CreatableFromArray;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**

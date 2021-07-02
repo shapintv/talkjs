@@ -7,12 +7,12 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs;
+namespace CarAndClassic\TalkJS;
 
-use CarAndClassic\TalkJs\Hydrator\ModelHydrator;
+use CarAndClassic\TalkJS\Hydrator\ModelHydrator;
 use Symfony\Component\HttpClient\HttpClient;
 
-final class TalkJsClient
+final class TalkJSClient
 {
     private $httpClient;
     private $hydrator;

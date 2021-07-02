@@ -1,4 +1,4 @@
-# TalkJs PHP SDK
+# TalkJS PHP SDK
 
 [![Latest version](https://img.shields.io/github/release/CarAndClassic/talkjs.svg?style=flat-square)](https://github.com/CarAndClassic/talkjs/releases)
 [![Total downloads](https://img.shields.io/packagist/dt/CarAndClassic/talkjs.svg?style=flat-square)](https://packagist.org/packages/CarAndClassic/talkjs)
@@ -14,11 +14,11 @@ $ composer require CarAndClassic/talkjs
 
 ## Usage
 
-### Create a `TalkJsClient`
+### Create a `TalkJSClient`
 
 ```php
-use CarAndClassic\TalkJs\TalkJsClient;
-$talkJSClient = new TalkJsClient($appId, $secretKey);
+use CarAndClassic\TalkJS\TalkJSClient;
+$talkJSClient = new TalkJSClient($appId, $secretKey);
 ```
 
 ### Users
@@ -77,7 +77,7 @@ Then create your service:
 
 ```yml
 services:
-    CarAndClassic\TalkJs\TalkJsClient: ~
+    CarAndClassic\TalkJS\TalkJSClient: ~
 ```
 
 You're done!

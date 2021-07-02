@@ -7,10 +7,10 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Tests\FunctionalTests;
+namespace CarAndClassic\TalkJS\Tests\FunctionalTests;
 
-use CarAndClassic\TalkJs\Model\User\User;
-use CarAndClassic\TalkJs\Model\User\UserCreatedOrUpdated;
+use CarAndClassic\TalkJS\Model\User\User;
+use CarAndClassic\TalkJS\Model\User\UserCreatedOrUpdated;
 
 final class UserTest extends TestCase
 {
@@ -18,7 +18,7 @@ final class UserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->api = $this->getTalkJsClient()->users();
+        $this->api = $this->getTalkJSClient()->users();
     }
 
     public function testCreateOrUpdate()

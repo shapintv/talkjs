@@ -7,7 +7,7 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Hydrator;
+namespace CarAndClassic\TalkJS\Hydrator;
 
 use Symfony\Contracts\HttpClient\ResponseInterface;
 

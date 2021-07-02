@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CarAndClassic\TalkJs\Model\Conversation;
+namespace CarAndClassic\TalkJS\Model\Conversation;
 
-use CarAndClassic\TalkJs\Model\CreatableFromArray;
+use CarAndClassic\TalkJS\Model\CreatableFromArray;
 
 class Message implements CreatableFromArray
 {

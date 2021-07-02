@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CarAndClassic\TalkJs\Model\User;
+namespace CarAndClassic\TalkJS\Model\User;
 
-use CarAndClassic\TalkJs\Model\CreatableFromArray;
+use CarAndClassic\TalkJS\Model\CreatableFromArray;
 
 class User implements CreatableFromArray
 {

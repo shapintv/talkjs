@@ -7,7 +7,7 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Model;
+namespace CarAndClassic\TalkJS\Model;
 
 abstract class Collection extends \ArrayObject implements CreatableFromArray
 {

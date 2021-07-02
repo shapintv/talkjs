@@ -7,9 +7,9 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Exception\Domain;
+namespace CarAndClassic\TalkJS\Exception\Domain;
 
-use CarAndClassic\TalkJs\Exception\DomainException;
+use CarAndClassic\TalkJS\Exception\DomainException;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class BadRequestException extends \Exception implements DomainException

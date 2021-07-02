@@ -1,8 +1,8 @@
 {
-    "name": "carandclassic/talkjs",
+    "name": "carandclassic/talkjs-php",
     "description": "PHP client for talk.js API",
     "license": "MIT",
-    "keywords": ["api", "chat", "talk", "talkjs"],
+    "keywords": ["carandclassic", "api", "chat", "talk", "talkjs"],
     "authors": [
         {
             "name": "Car & Classic",
@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "CarAndClassic\\TalkJs\\": "src/"
+            "CarAndClassic\\TalkJS\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CarAndClassic\\TalkJs\\Tests\\": "tests/"
+            "CarAndClassic\\TalkJS\\Tests\\": "tests/"
         }
     },
     "scripts": {

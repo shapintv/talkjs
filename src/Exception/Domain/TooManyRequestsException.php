@@ -7,9 +7,9 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace CarAndClassic\TalkJs\Exception\Domain;
+namespace CarAndClassic\TalkJS\Exception\Domain;
 
-use CarAndClassic\TalkJs\Exception\DomainException;
+use CarAndClassic\TalkJS\Exception\DomainException;
 
 final class TooManyRequestsException extends \Exception implements DomainException
 {
