@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CarAndClassic\TalkJS\Model\User;
+namespace CarAndClassic\TalkJS\Models;
 
 class UserCreatedOrUpdated
 {

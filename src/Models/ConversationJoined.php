@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CarAndClassic\TalkJS\Model\Conversation;
+namespace CarAndClassic\TalkJS\Models;
 
 class ConversationJoined
 {
