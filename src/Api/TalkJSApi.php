@@ -9,22 +9,23 @@ declare(strict_types=1);
 
 namespace CarAndClassic\TalkJS\Api;
 
-use CarAndClassic\TalkJS\Exception\Domain as DomainExceptions;
-use CarAndClassic\TalkJS\Exception\DomainException;
-use CarAndClassic\TalkJS\Exception\LogicException;
-use CarAndClassic\TalkJS\Hydrator\Hydrator;
+use CarAndClassic\TalkJS\Exceptions\Api as ApiExceptions;
+use CarAndClassic\TalkJS\Exceptions\LogicException;
+use CarAndClassic\TalkJS\Exceptions\ResponseException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 abstract class TalkJSApi
 {
     protected HttpClientInterface $httpClient;
-    protected Hydrator $hydrator;
 
-    public function __construct(HttpClientInterface $httpClient, Hydrator $hydrator)
+    public function __construct(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
-        $this->hydrator = $hydrator;
     }
 
     /**
@@ -32,10 +33,7 @@ abstract class TalkJSApi
      */
     protected function httpGet(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
-        return $this->httpClient->request('GET', $path, [
-            'query' => $params,
-            'headers' => $requestHeaders,
-        ]);
+        return $this->httpRequest('GET', $path, $params, $requestHeaders);
     }
 
     /**
@@ -43,18 +41,7 @@ abstract class TalkJSApi
      */
     protected function httpPost(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
-        return $this->httpPostRaw($path, $this->createJsonBody($params), $requestHeaders);
-    }
-
-    /**
-     * Send a POST request with raw data.
-     */
-    protected function httpPostRaw(string $path, $body, array $requestHeaders = []): ResponseInterface
-    {
-        return $this->httpClient->request('POST', $path, [
-            'body' => $body,
-            'headers' => $requestHeaders,
-        ]);
+        return $this->httpRequest('POST', $path, $this->createJsonBody($params), $requestHeaders);
     }
 
     /**
@@ -62,10 +49,7 @@ abstract class TalkJSApi
      */
     protected function httpPut(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
-        return $this->httpClient->request('PUT', $path, [
-            'body' => $this->createJsonBody($params),
-            'headers' => $requestHeaders,
-        ]);
+        return $this->httpRequest('PUT', $path, $this->createJsonBody($params), $requestHeaders);
     }
 
     /**
@@ -73,10 +57,7 @@ abstract class TalkJSApi
      */
     protected function httpPatch(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
-        return $this->httpClient->request('PATCH', $path, [
-            'body' => $this->createJsonBody($params),
-            'headers' => $requestHeaders,
-        ]);
+        return $this->httpRequest('PATCH', $path, $this->createJsonBody($params), $requestHeaders);
     }
 
     /**
@@ -84,10 +65,29 @@ abstract class TalkJSApi
      */
     protected function httpDelete(string $path, array $params = [], array $requestHeaders = []): ResponseInterface
     {
-        return $this->httpClient->request('DELETE', $path, [
-            'body' => $this->createJsonBody($params),
+        return $this->httpRequest('DELETE', $path, $this->createJsonBody($params), $requestHeaders);
+    }
+
+    /**
+     * Send an HTTP request with JSON-encoded parameters.
+     * @param string $type
+     * @param string $path
+     * @param $params
+     * @param array $requestHeaders
+     * @return ResponseInterface
+     * @throws TransportExceptionInterface
+     */
+    protected function httpRequest(string $type, string $path, $params = [], array $requestHeaders = []): ResponseInterface
+    {
+        $dataKey = 'query';
+        if (in_array($type, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            $dataKey = 'body';
+        }
+        return $this->httpClient->request($type, $path, [
+            $dataKey => $this->createJsonBody($params),
             'headers' => $requestHeaders,
         ]);
+
     }
 
     /**
@@ -104,32 +104,55 @@ abstract class TalkJSApi
         $body = json_encode($params);
 
         if (!\is_string($body)) {
-            throw new LogicException('An error occured when encoding body: '.json_last_error_msg());
+            throw new LogicException('An error occurred when encoding body: '.json_last_error_msg());
         }
 
         return $body;
     }
 
     /**
-     * Handle HTTP errors.
-     *
-     * Call is controlled by the specific API methods.
-     *
-     * @throws DomainException
+     * @param ResponseInterface $response
+     * @return array
+     * @throws ApiExceptions\BadRequestException
+     * @throws ApiExceptions\NotFoundException
+     * @throws ApiExceptions\TooManyRequestsException
+     * @throws ApiExceptions\UnauthorizedException
+     * @throws ApiExceptions\UnknownErrorException
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
-    protected function handleErrors(ResponseInterface $response)
+    protected function parseResponse(ResponseInterface $response): array
     {
-        switch ($response->getStatusCode()) {
-            case 400:
-                throw new DomainExceptions\BadRequestException($response);
-            case 401:
-                throw new DomainExceptions\UnauthorizedException();
-            case 404:
-                throw new DomainExceptions\NotFoundException();
-            case 429:
-                throw new DomainExceptions\TooManyRequestsException();
-            default:
-                throw new DomainExceptions\UnknownErrorException($response);
+        if ($response->getStatusCode() !== 200) {
+            switch ($response->getStatusCode()) {
+                case 400:
+                    throw new ApiExceptions\BadRequestException($response);
+                case 401:
+                    throw new ApiExceptions\UnauthorizedException();
+                case 404:
+                    throw new ApiExceptions\NotFoundException();
+                case 429:
+                    throw new ApiExceptions\TooManyRequestsException();
+                default:
+                    throw new ApiExceptions\UnknownErrorException($response);
+            }
         }
+
+        if (!isset($response->getHeaders()['content-type'])) {
+            throw new ResponseException('The ModelHydrator cannot hydrate response without Content-Type header.');
+        }
+
+        $contentType = reset($response->getHeaders()['content-type']);
+        if (0 !== strpos($contentType, 'application/json')) {
+            throw new ResponseException("The ModelHydrator cannot hydrate response with Content-Type: $contentType");
+        }
+
+        $data = json_decode($response->getContent(), true);
+        if (\JSON_ERROR_NONE !== json_last_error()) {
+            throw new ResponseException(sprintf('Error (%d) when trying to json_decode response', json_last_error()));
+        }
+        return $data;
     }
 }
