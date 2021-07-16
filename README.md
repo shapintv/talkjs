@@ -47,12 +47,12 @@ $user = $client->users()->get('my_custom_id');
 ### Deal with conversations
 
 ```php
-// Create or update a user
+// Create or update a conversation
 $client->conversations()->createOrUpdate('my_custom_id', [
     'subject' => 'My new conversation',
 ]);
 
-// Retrive a conversation
+// Retrieve a conversation
 $conversation = $client->conversations()->get('my_custom_id');
 
 // Find conversations
