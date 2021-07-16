@@ -9,14 +9,21 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS;
 
+use Shapin\TalkJS\Api\ConversationApi;
+use Shapin\TalkJS\Api\UserApi;
 use Shapin\TalkJS\Hydrator\Hydrator;
 use Shapin\TalkJS\Hydrator\ModelHydrator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class TalkJSClient
 {
-    private $httpClient;
+    private HttpClientInterface $httpClient;
+
     private $hydrator;
+
+    private UserApi $userApi;
+
+    private ConversationApi $conversationApi;
 
     public function __construct(HttpClientInterface $talkjsClient, Hydrator $hydrator = null)
     {
@@ -24,13 +31,19 @@ final class TalkJSClient
         $this->hydrator = $hydrator ?: new ModelHydrator();
     }
 
-    public function users(): Api\User
+    public function users(): UserApi
     {
-        return new Api\User($this->httpClient, $this->hydrator);
+        if (!isset($this->userApi)){
+            $this->userApi = new UserApi($this->httpClient, $this->hydrator);
+        }
+        return $this->userApi;
     }
 
-    public function conversations(): Api\Conversation
+    public function conversations(): ConversationApi
     {
-        return new Api\Conversation($this->httpClient, $this->hydrator);
+        if (!isset($this->userApi)){
+            $this->conversationApi = new ConversationApi($this->httpClient, $this->hydrator);
+        }
+        return $this->conversationApi;
     }
 }

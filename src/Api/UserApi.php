@@ -10,12 +10,14 @@ declare(strict_types=1);
 namespace Shapin\TalkJS\Api;
 
 use Shapin\TalkJS\Exception;
+use Shapin\TalkJS\Exception\Api\ApiException;
 use Shapin\TalkJS\Model;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-final class User extends HttpApi
+final class UserApi extends HttpApi
 {
     /**
-     * @throws Exception
+     * @throws ApiException|TransportExceptionInterface
      */
     public function createOrUpdate(string $id, array $params)
     {
@@ -29,7 +31,7 @@ final class User extends HttpApi
     }
 
     /**
-     * @throws Exception
+     * @throws ApiException|TransportExceptionInterface
      */
     public function get(string $id)
     {
