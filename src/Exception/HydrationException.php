@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Shapin\TalkJS\Exception;
 
-use Shapin\TalkJS\Exception;
-
-class HydrationException extends \RuntimeException implements Exception
+class HydrationException extends \RuntimeException
 {
 }

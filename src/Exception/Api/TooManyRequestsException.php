@@ -7,10 +7,8 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Exception\Domain;
+namespace Shapin\TalkJS\Exception\Api;
 
-use Shapin\TalkJS\Exception\DomainException;
-
-final class UnauthorizedException extends \Exception implements DomainException
+final class TooManyRequestsException extends \Exception implements ApiException
 {
 }

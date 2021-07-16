@@ -7,14 +7,13 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Exception\Domain;
+namespace Shapin\TalkJS\Exception\Api;
 
-use Shapin\TalkJS\Exception\DomainException;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class BadRequestException extends \Exception implements DomainException
+class BadRequestException extends \Exception implements ApiException
 {
-    protected $response;
+    protected ResponseInterface $response;
 
     public function __construct(ResponseInterface $response)
     {

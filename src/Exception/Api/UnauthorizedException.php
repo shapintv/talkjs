@@ -7,10 +7,8 @@ declare(strict_types=1);
  * of the MIT license. See the LICENSE file for details.
  */
 
-namespace Shapin\TalkJS\Exception;
+namespace Shapin\TalkJS\Exception\Api;
 
-use Shapin\TalkJS\Exception;
-
-class InvalidArgumentException extends \InvalidArgumentException implements Exception
+final class UnauthorizedException extends \Exception implements ApiException
 {
 }
