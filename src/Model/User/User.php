@@ -8,65 +8,32 @@ use Shapin\TalkJS\Model\CreatableFromArray;
 
 class User implements CreatableFromArray
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private string $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var ?string
-     */
-    private $welcomeMessage;
+    private ?string $welcomeMessage;
 
-    /**
-     * @var ?string
-     */
-    private $photoUrl;
+    private ?string $photoUrl;
 
-    /**
-     * @var ?string
-     */
-    private $role;
+    private ?string $role;
 
-    /**
-     * @var array
-     */
-    private $email;
+    private array $email;
 
-    /**
-     * @var array
-     */
-    private $phone;
+    private array $phone;
 
-    /**
-     * @var array
-     */
-    private $custom;
+    private array $custom;
 
-    /**
-     * @var ?string
-     */
-    private $availabilityText;
+    private ?string $availabilityText;
 
-    /**
-     * @var ?string
-     */
-    private $locale;
+    private ?string $locale;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     /**
      * {@inheritdoc}
      */
-    public static function createFromArray(array $data)
+    public static function createFromArray(array $data): self
     {
         $timestamp = round($data['createdAt'] / 1000, 0);
 

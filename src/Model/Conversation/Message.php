@@ -11,60 +11,27 @@ class Message implements CreatableFromArray
     const TYPE_SYSTEM_MESSAGE = 'SystemMessage';
     const TYPE_USER_MESSAGE = 'UserMessage';
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
 
-    /**
-     * @var string
-     */
-    private $text;
+    private string $text;
 
-    /**
-     * @var ?string
-     */
-    private $senderId;
+    private ?string $senderId;
 
-    /**
-     * @var array
-     */
-    private $readBy;
+    private array $readBy;
 
-    /**
-     * @var string
-     */
-    private $origin;
+    private string $origin;
 
-    /**
-     * @var string
-     */
-    private $location;
+    private ?string $location;
 
-    /**
-     * @var string
-     */
-    private $id;
+    private string $id;
 
-    /**
-     * @var array
-     */
-    private $custom;
+    private array $custom;
 
-    /**
-     * @var string
-     */
-    private $conversationId;
+    private string $conversationId;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $createdAt;
+    private \DateTimeImmutable $createdAt;
 
-    /**
-     * @var string
-     */
-    private $attachment;
+    private ?string $attachment;
 
     /**
      * {@inheritdoc}

@@ -11,7 +11,7 @@ class ConversationCollection extends Collection
     /**
      * {@inheritdoc}
      */
-    public static function createFromArray(array $data)
+    public static function createFromArray(array $data): self
     {
         $conversations = [];
 
