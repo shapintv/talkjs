@@ -100,9 +100,8 @@ For more information on custom data and filters, please refer to the TalkJS docu
 
 Please note:
 
-- Sending file attachment is not yet implemented.
+- Sending file attachment is not implemented.
 - Endpoints that return multiple messages will return them in descending order, i.e. latest first.
-
 
 ```php
 $custom = [
